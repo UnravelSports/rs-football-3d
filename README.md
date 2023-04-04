@@ -5,10 +5,10 @@ This project is a proof-of-concept by UnravelSports to show displaying football/
 Follow the steps in the [Official Rust Documentation](https://www.rust-lang.org/tools/install) on how to install Rust.
 
 ## Build
-- `cargo build`
+After pulling the code for the first time run `cargo build` inside the project folder.
 
 ## Run
-- `cargo run` 
+Then run `cargo run`.
 
 ## Resources
 - [Rust Language Open-Source Book](https://github.com/rust-lang/book)

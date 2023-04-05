@@ -3,7 +3,7 @@
 [<img alt="alt_text" width="40px" src="assets/twitter.png"/>](https://twitter.com/unravelsports)
 [<img alt="alt_text" width="40px" src="assets/github.png"/>](https://unravelsports.github.io)
 
-<video src="https://vimeo.com/814914982"></video>
+<div style="padding:75% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/814914982?h=69b41b37c8&amp;badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen style="position:absolute;top:0;left:0;width:100%;height:100%;" title="Video.mp4"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
 
 ## Introduction
 This project is a proof-of-concept by [UnravelSports](https://unravelsports.github.io/) to show football/soccer data in 3D using the [Rust programming language](https://www.rust-lang.org/) and the [Bevy game engine](https://bevyengine.org/).

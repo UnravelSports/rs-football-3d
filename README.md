@@ -1,5 +1,7 @@
 ## Introduction
-This project is a proof-of-concept by UnravelSports to show displaying football/soccer data in 3D using the Rust programming language and the Bevy game engine.
+This project is a proof-of-concept by UnravelSports to show football/soccer data in 3D using the [Rust programming language](https://www.rust-lang.org/) and the [Bevy game engine](https://bevyengine.org/).
+
+<video src="imgs/Video.mp4"></video>
 
 ## Install Rust
 Follow the steps in the [Official Rust Documentation](https://www.rust-lang.org/tools/install) on how to install Rust.

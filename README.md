@@ -1,4 +1,7 @@
 [![UnravelSports | Football in 3D](assets/logo.png)](https://unravelsports.github.io/)
+[<img alt="alt_text" width="40px" src="assets/linkedin.png"/>](https://www.linkedin.com/in/joris-bekkers-33138288/)
+[<img alt="alt_text" width="40px" src="assets/twitter.png"/>](https://twitter.com/unravelsports)
+[<img alt="alt_text" width="40px" src="assets/github.png"/>](https://unravelsports.github.io)
 
 ## Introduction
 This project is a proof-of-concept by [UnravelSports](https://unravelsports.github.io/) to show football/soccer data in 3D using the [Rust programming language](https://www.rust-lang.org/) and the [Bevy game engine](https://bevyengine.org/).

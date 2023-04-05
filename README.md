@@ -3,7 +3,7 @@
 [<img alt="alt_text" width="40px" src="assets/twitter.png"/>](https://twitter.com/unravelsports)
 [<img alt="alt_text" width="40px" src="assets/github.png"/>](https://unravelsports.github.io)
 
-<img src="assets/screenshot.png" width="450"/> <img src="assets/screenshot2.png" width="400"/> 
+<img src="assets/screenshot.png" width="425"/> <img src="assets/screenshot2.png" width="380"/> 
 
 ## Introduction
 This project is a proof-of-concept by [UnravelSports](https://unravelsports.github.io/) to show football/soccer data in 3D using the [Rust programming language](https://www.rust-lang.org/) and the [Bevy game engine](https://bevyengine.org/).

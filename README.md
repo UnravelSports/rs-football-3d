@@ -15,6 +15,9 @@ After pulling the code for the first time run `cargo build` inside the project f
 ## Run
 Then run `cargo run`.
 
+## Controls
+The camera can be moved with `w`, `a`, `s` & `d` (forward, left, backward & right respectively), and we can use `q` and `e` to rotate the camera. 
+
 ## Resources
 - [Rust Language Open-Source Book](https://github.com/rust-lang/book)
 - [Basic Bevy Development by LogicProjects](https://www.youtube.com/@logicprojects)

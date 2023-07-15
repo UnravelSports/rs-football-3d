@@ -1,7 +1,7 @@
 use std::f32::consts::PI;
 
 use bevy::prelude::*;
-use bevy_inspector_egui::{WorldInspectorPlugin, Inspectable};
+use bevy_inspector_egui::{Inspectable, WorldInspectorPlugin};
 
 use cute::c;
 
@@ -16,7 +16,6 @@ mod player;
 pub use data::*;
 pub use player::*;
 
-
 #[derive(Resource)]
 pub struct GameAssets {
     goal_scene: Handle<Scene>,
@@ -24,7 +23,7 @@ pub struct GameAssets {
     away_player_scene: Handle<Scene>,
     stadium_scene: Handle<Scene>,
     pitch_scene: Handle<Scene>,
-    play_button: Handle<Image>
+    play_button: Handle<Image>,
 }
 
 fn main() {
@@ -48,10 +47,8 @@ fn main() {
         // plugin:
         .add_plugin(WorldInspectorPlugin::new())
         .add_plugin(PlayerPlugin)
-
         // types:
         // .register_type::<Player>() <- We add this via a Plugin now
-
         // systems before start up:
         .add_startup_system_to_stage(StartupStage::PreStartup, asset_loading)
         .add_startup_system_to_stage(StartupStage::PreStartup, json_loading)
@@ -59,12 +56,10 @@ fn main() {
         .add_startup_system(spawn_basic_scene)
         .add_startup_system(create_ui)
         .add_startup_system(spawn_camera)
-        
         // systems to run each frame
         .add_system(camera_controls)
         .add_system(update)
         .add_system(button_clicked)
-        
         .run();
 }
 
@@ -79,27 +74,24 @@ fn asset_loading(mut commands: Commands, assets: Res<AssetServer>) {
     });
 }
 
-fn json_loading(mut commands: Commands){
+fn json_loading(mut commands: Commands) {
     let input_path = "assets/goal_sequence.json";
-    commands.insert_resource(
-        MatchData {
-            data:  {
-                let match_data = std::fs::read_to_string(&input_path).expect("JSON Loading Failed...");
-                serde_json::from_str::<MatchFrames>(&match_data).unwrap()
-            },
-            t: 0.0
-        })
+    commands.insert_resource(MatchData {
+        data: {
+            let match_data = std::fs::read_to_string(&input_path).expect("JSON Loading Failed...");
+            serde_json::from_str::<MatchFrames>(&match_data).unwrap()
+        },
+        t: 0.0,
+    })
 }
-
 
 fn spawn_basic_scene(
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
     game_assets: Res<GameAssets>,
-    match_data: ResMut<MatchData>
+    match_data: ResMut<MatchData>,
 ) {
-
     commands
         .spawn(SceneBundle {
             scene: game_assets.stadium_scene.clone(),
@@ -111,50 +103,58 @@ fn spawn_basic_scene(
     commands
         .spawn(SceneBundle {
             scene: game_assets.pitch_scene.clone(),
-            transform: Transform::from_xyz(0.1, 0.09, 0.0)
-            .with_scale(Vec3::new(0.468, 1.0, 0.468)),
+            transform: Transform::from_xyz(0.1, 0.09, 0.0).with_scale(Vec3::new(0.468, 1.0, 0.468)),
             ..Default::default()
         })
         .insert(Name::new("PitchModel"));
 
     commands
         .spawn(PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad { size: Vec2{
-                x: 105.0, y: 68.0}, flip: false})),
+            mesh: meshes.add(Mesh::from(shape::Quad {
+                size: Vec2 { x: 105.0, y: 68.0 },
+                flip: false,
+            })),
             material: materials.add(Color::rgb(1.0, 1.0, 1.0).into()),
-             transform: Transform::from_xyz(0.0, 0.05, 0.0).with_rotation(Quat::from_rotation_x(-PI / 2.0)),
+            transform: Transform::from_xyz(0.0, 0.05, 0.0)
+                .with_rotation(Quat::from_rotation_x(-PI / 2.0)),
             ..default()
         })
         .insert(Name::new("Outerlines"));
 
     commands
         .spawn(PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Quad { size: Vec2{
-                x: 1000.0, y: 1000.0}, flip: false})),
+            mesh: meshes.add(Mesh::from(shape::Quad {
+                size: Vec2 {
+                    x: 1000.0,
+                    y: 1000.0,
+                },
+                flip: false,
+            })),
             material: materials.add(Color::rgb(0.7, 0.7, 0.7).into()),
-             transform: Transform::from_xyz(0.0, -0.5, 0.0).with_rotation(Quat::from_rotation_x(-PI / 2.0)),
+            transform: Transform::from_xyz(0.0, -0.5, 0.0)
+                .with_rotation(Quat::from_rotation_x(-PI / 2.0)),
             ..default()
         })
         .insert(Name::new("Underground"));
 
     let signs = vec![-1.0, 1.0];
     for i in &signs {
-            commands
-                .spawn(SceneBundle {
-                    scene: game_assets.goal_scene.clone(),
-                    transform: Transform::from_xyz(i*53.13, -0.10, 0.0 + (i * 3.66))
-                        // scale to human size
-                        .with_scale(Vec3::new(0.01464, 0.01464, 0.01464))
-                        // rotate facing goal or away from goal
-                        .with_rotation(Quat::from_rotation_y((-PI / 2.0) * -i)),
-                    ..Default::default()
-                })
-                .insert(Name::new("GoalModel"));
+        commands
+            .spawn(SceneBundle {
+                scene: game_assets.goal_scene.clone(),
+                transform: Transform::from_xyz(i * 53.13, -0.10, 0.0 + (i * 3.66))
+                    // scale to human size
+                    .with_scale(Vec3::new(0.01464, 0.01464, 0.01464))
+                    // rotate facing goal or away from goal
+                    .with_rotation(Quat::from_rotation_y((-PI / 2.0) * -i)),
+                ..Default::default()
+            })
+            .insert(Name::new("GoalModel"));
     }
 
     let idx: usize = 0;
 
-    for p in &match_data.data.players[idx]{
+    for p in &match_data.data.players[idx] {
         println!("{:?}", p);
 
         let scene = if p.team == "home" {
@@ -167,30 +167,28 @@ fn spawn_basic_scene(
         commands
             .spawn(SceneBundle {
                 scene: scene,
-                transform: Transform::from_xyz(p.x, 0.0, -1.0*p.y)
-                .with_rotation(Quat::from_rotation_y(theta.tan())),
+                transform: Transform::from_xyz(p.x, 0.0, -1.0 * p.y)
+                    .with_rotation(Quat::from_rotation_y(theta.tan())),
 
                 ..Default::default()
             })
-            .insert(Player {
-                pid: p.pid
-            })
-            .insert(Name::new(format!("Player-{t}", t=p.team)));
-
+            .insert(Player { pid: p.pid })
+            .insert(Name::new(format!("Player-{t}", t = p.team)));
     }
 
     let ball = &match_data.data.ball[idx];
 
     commands
         .spawn(PbrBundle {
-            mesh: meshes.add(Mesh::from(shape::Icosphere{ radius: 0.216, subdivisions: 24})),
+            mesh: meshes.add(Mesh::from(shape::Icosphere {
+                radius: 0.216,
+                subdivisions: 24,
+            })),
             material: materials.add(Color::rgb(0.95, 0.95, 0.95).into()),
-            transform: Transform::from_xyz(ball.x, 0.216+ball.z, -1.0*ball.y),
+            transform: Transform::from_xyz(ball.x, 0.216 + ball.z, -1.0 * ball.y),
             ..default()
         })
-        .insert(Player {
-            pid: 0
-        })
+        .insert(Player { pid: 0 })
         .insert(Name::new("BallModel"));
 }
 
@@ -211,19 +209,21 @@ fn update(
         let (idx, alpha) = match_data.get_interpolation_values_and_increment(time.delta_seconds());
 
         for (player, mut transform) in &mut players {
-            if player.pid == 0 { // pid == 0 is the ball
+            if player.pid == 0 {
+                // pid == 0 is the ball
                 let b: &BallFrame = &match_data.data.ball[idx];
-                let b1: &BallFrame = &match_data.data.ball[idx+1];
+                let b1: &BallFrame = &match_data.data.ball[idx + 1];
 
                 transform.translation.x = interpolate(alpha, b.x, b1.x);
-                transform.translation.y = interpolate(alpha, b.z, b1.z) + 0.216;  // add 0.216 so the ball is not half under the pitch
+                transform.translation.y = interpolate(alpha, b.z, b1.z) + 0.216; // add 0.216 so the ball is not half under the pitch
                 transform.translation.z = interpolate(alpha, b.y, b1.y) * -1.0;
-            }
-            else {
+            } else {
                 // sub-optimal way to find the PlayerFrame related to the player.pid that we happen to loop over right now
                 // this is done in a Pythonic way with a crate(cute) that supports this
-                let p: &PlayerFrame = c![p, for p in &match_data.data.players[idx], if p.pid == player.pid][0];
-                let p1: &PlayerFrame = c![p, for p in &match_data.data.players[idx+1], if p.pid == player.pid][0];
+                let p: &PlayerFrame =
+                    c![p, for p in &match_data.data.players[idx], if p.pid == player.pid][0];
+                let p1: &PlayerFrame =
+                    c![p, for p in &match_data.data.players[idx+1], if p.pid == player.pid][0];
 
                 // interpolate x and z by taking the value from the current frame and the next frame;
                 transform.translation.x = interpolate(alpha, p.x, p1.x);
@@ -241,13 +241,12 @@ fn update(
             }
         }
     }
-
 }
-
 
 fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera3dBundle {
-        transform: Transform::from_xyz(-25.0, 25.0, 10.0).looking_at(Vec3::new(52.5, -20.0, -10.0), Vec3::Y),
+        transform: Transform::from_xyz(-25.0, 25.0, 10.0)
+            .looking_at(Vec3::new(52.5, -20.0, -10.0), Vec3::Y),
         ..default()
     });
 }
@@ -269,7 +268,7 @@ fn camera_controls(
 
     let speed = 10.0;
     let rotate_speed = 0.25;
-    
+
     if keyboard.pressed(KeyCode::W) {
         camera.translation += forward * time.delta_seconds() * speed;
     }
@@ -293,18 +292,15 @@ fn camera_controls(
 #[derive(Inspectable, Component, Clone, Copy, Debug)]
 pub struct Button {
     kind: ButtonType,
-    is_enabled: bool
+    is_enabled: bool,
 }
-
 
 #[derive(Inspectable, Component, Clone, Copy, Debug)]
 pub enum ButtonType {
-    Play
+    Play,
 }
 
-fn create_ui(mut commands: Commands,
-    game_assets: Res<GameAssets>
-){
+fn create_ui(mut commands: Commands, game_assets: Res<GameAssets>) {
     commands
         .spawn(NodeBundle {
             style: Style {
@@ -328,16 +324,17 @@ fn create_ui(mut commands: Commands,
                 })
                 .insert(Button {
                     kind: ButtonType::Play,
-                    is_enabled: true
-                }) ;
+                    is_enabled: true,
+                });
         });
 }
 
 fn button_clicked(
     mut interaction: Query<(&Interaction, &mut Button), Changed<Interaction>>,
-    game_assets: Res<GameAssets>) {
+    game_assets: Res<GameAssets>,
+) {
     for (interaction, mut button) in &mut interaction {
-        if matches!(interaction, Interaction::Clicked)  {
+        if matches!(interaction, Interaction::Clicked) {
             if matches!(button.kind, ButtonType::Play) {
                 button.is_enabled = !button.is_enabled;
                 println!("Spawning: {:?}", button);

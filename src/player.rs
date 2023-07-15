@@ -3,7 +3,7 @@ use bevy::prelude::*;
 #[derive(Reflect, Component, Default)]
 #[reflect(Component)]
 pub struct Player {
-    pub pid: u32
+    pub pid: u32,
 }
 
 pub struct PlayerPlugin;

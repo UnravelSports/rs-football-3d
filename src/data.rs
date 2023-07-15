@@ -13,7 +13,7 @@ pub struct PlayerFrame {
     pub vx: f32,
     pub vy: f32,
     pub pid: u32,
-    pub team: String
+    pub team: String,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -22,7 +22,7 @@ pub struct BallFrame {
     pub y: f32,
     pub z: f32,
     pub vx: f32,
-    pub vy: f32
+    pub vy: f32,
 }
 
 #[derive(Deserialize, Serialize, Debug)]
